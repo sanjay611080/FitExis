@@ -4,17 +4,17 @@ import React from 'react';
 
 const features = [
   {
-    imgSrc: '/background_1.jpg',
+    imgSrc: '/gym.png',
     heading: 'Flexible Memberships',
     description: 'Choose from daily, weekly, or monthly gym memberships that fit your schedule and budget. Enjoy the flexibility to work out at your convenience.',
   },
   {
-    imgSrc: '/background_2.jpg',
+    imgSrc: '/gym_2.png',
     heading: 'Find Gyms Nearby',
     description: 'Use our app to locate gyms in your area. View gym photos, descriptions, and available facilities. Find the perfect gym that suits your needs.',
   },
   {
-    imgSrc: '/background_3.jpg',
+    imgSrc: '/gym_3.png',
     heading: 'Book & Pay Online',
     description: 'Easily book gym sessions and make payments through our secure platform. Manage your bookings and payments all in one place, hassle-free.',
   },
