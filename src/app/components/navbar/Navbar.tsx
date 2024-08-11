@@ -1,4 +1,3 @@
-// components/Navbar.tsx
 "use client";
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -34,7 +33,7 @@ const Navbar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
+  };  
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -42,7 +41,9 @@ const Navbar = () => {
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
-    router.push(`/${page.toLowerCase().replace(' ', '-')}`);
+    // Map the page names to paths
+    const path = page === 'About' ? '/About' : `/${page.toLowerCase().replace(' ', '-')}`;
+    router.push(path);
     handleCloseNavMenu();
   };
 
