@@ -10,11 +10,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { MenuItem, Tooltip, Typography } from '@mui/material';
+import { MenuItem, Tooltip, Typography, TextField, InputAdornment } from '@mui/material';
 import Image from "next/image";
-import { useRouter } from 'next/navigation';  // Use 'next/navigation' instead of 'next/router'
+import { useRouter } from 'next/navigation';
+import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Home', 'Near Me', 'Products'];
+const pages = ['Home', 'Near Me', 'Plans', 'About'];
 const settings = ['Profile', 'Account', 'Logout'];
 
 const Navbar = () => {
@@ -48,19 +49,19 @@ const Navbar = () => {
   return (
     <AppBar
       position="fixed"
-      sx={{ 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', 
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)', 
+      sx={{
+        top: 0,
+        left: 0,
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
         zIndex: 1201,
         px: { xs: 2, md: 4 }, // Add padding for left and right
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
             <Image src="/Logo.png" alt="Logo" width={40} height={40} />
           </Box>
           <Typography
@@ -69,7 +70,7 @@ const Navbar = () => {
             component="a"
             href="#"
             sx={{
-              mr: 2,
+              mr: 1,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -111,14 +112,14 @@ const Navbar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem 
-                  key={page} 
+                <MenuItem
+                  key={page}
                   onClick={() => handlePageChange(page)}
                 >
-                  <Typography 
-                    textAlign="center" 
-                    sx={{ 
-                      color: activePage === page ? 'primary.main' : 'text.primary' 
+                  <Typography
+                    textAlign="center"
+                    sx={{
+                      color: activePage === page ? 'primary.main' : 'text.primary'
                     }}
                   >
                     {page}
@@ -129,7 +130,7 @@ const Navbar = () => {
           </Box>
 
           {/* Logo for Mobile View */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 2 }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
             <Image src="/Logo.png" alt="Logo" width={40} height={40} />
           </Box>
 
@@ -139,7 +140,7 @@ const Navbar = () => {
             component="a"
             href="#"
             sx={{
-              mr: 2,
+              mr: 1,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
               fontFamily: 'monospace',
@@ -151,15 +152,18 @@ const Navbar = () => {
           >
             FitExis
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+          {/* Align Buttons to the Left with Spacing */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-start' }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                sx={{ 
-                  my: 2, 
-                  color: activePage === page ? 'primary.main' : 'white', 
-                  display: 'block' 
+                sx={{
+                  my: 2,
+                  color: activePage === page ? 'primary.main' : 'white',
+                  display: 'block',
+                  mx: 1.5, // Adjust this value for spacing between buttons
                 }}
               >
                 {page}
@@ -167,20 +171,49 @@ const Navbar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+          {/* Search Bar */}
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', mr: 1 }}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                backgroundColor: 'white',
+                borderRadius: 1,
+                width: { xs: '100px', md: '200px' }, // Adjust width for different screen sizes
+              }}
+            />
+          </Box>
+
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', backgroudcolor: "grey" }}>
             <Button
               variant="contained"
               color="primary"
-              sx={{ mr: 2 }}
+              sx={{
+                mr: 1,
+                color: 'black', 
+                backgroundColor: '#adacac', 
+                '&:hover': {
+                  backgroundColor: 'grey',
+                }
+              }}
               onClick={() => router.push('/login')}
             >
               Get Started
             </Button>
-            <Tooltip title="Open settings">
+
+            {/* <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="User" src="/static/images/avatar/2.jpg" />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
