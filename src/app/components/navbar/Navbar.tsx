@@ -7,9 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { MenuItem, Tooltip, Typography, TextField, InputAdornment } from '@mui/material';
+import { MenuItem, Typography, TextField, InputAdornment } from '@mui/material';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
@@ -19,6 +18,7 @@ const settings = ['Profile', 'Account', 'Logout'];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElSearch, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [activePage, setActivePage] = React.useState<string | null>(null);
   const router = useRouter();
@@ -27,13 +27,21 @@ const Navbar = () => {
     setAnchorElNav(event.currentTarget);
   };
 
+  const handleOpenSearchMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElSearch(event.currentTarget);
+  };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };  
+  };
+
+  const handleCloseSearchMenu = () => {
+    setAnchorElSearch(null);
+  };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -41,8 +49,7 @@ const Navbar = () => {
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
-    // Map the page names to paths
-    const path = page === 'About' ? '/About' : `/${page.toLowerCase().replace(' ', '-')}`;
+    const path = page === 'Home' ? '/' : `/${page.replace(' ', '-')}`;
     router.push(path);
     handleCloseNavMenu();
   };
@@ -57,13 +64,14 @@ const Navbar = () => {
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
         zIndex: 1201,
-        px: { xs: 2, md: 4 }, // Add padding for left and right
+        px: { xs: 2, md: 4 },
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Logo for Desktop View */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-            <Image src="/Logo.png" alt="Logo" width={40} height={40} />
+            <Image src="/Logo.png" alt="Logo" width={35} height={35} onClick={() => handlePageChange('Home')} style={{ cursor: 'pointer' }} />
           </Box>
           <Typography
             variant="h6"
@@ -75,14 +83,18 @@ const Navbar = () => {
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.2rem',
               color: 'white',
               textDecoration: 'none',
+              fontSize: '1rem', // Adjust font size
             }}
+            onClick={() => handlePageChange('Home')}
+            style={{ cursor: 'pointer' }}
           >
             FitExis
           </Typography>
 
+          {/* Mobile Menu Icon */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -116,11 +128,17 @@ const Navbar = () => {
                 <MenuItem
                   key={page}
                   onClick={() => handlePageChange(page)}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: '#f0f0f0', // Off-white background on hover
+                      color: 'black', // Black text color on hover
+                    }
+                  }}
                 >
                   <Typography
                     textAlign="center"
                     sx={{
-                      color: activePage === page ? 'primary.main' : 'text.primary'
+                      color: activePage === page ? 'primary.main' : 'text.primary',
                     }}
                   >
                     {page}
@@ -132,7 +150,7 @@ const Navbar = () => {
 
           {/* Logo for Mobile View */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-            <Image src="/Logo.png" alt="Logo" width={40} height={40} />
+            <Image src="/Logo.png" alt="Logo" width={35} height={35} onClick={() => handlePageChange('Home')} style={{ cursor: 'pointer' }} />
           </Box>
 
           <Typography
@@ -146,15 +164,18 @@ const Navbar = () => {
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.2rem',
               color: 'white',
               textDecoration: 'none',
+              fontSize: '1.2rem', // Adjust font size
             }}
+            onClick={() => handlePageChange('Home')}
+            style={{ cursor: 'pointer' }}
           >
             FitExis
           </Typography>
 
-          {/* Align Buttons to the Left with Spacing */}
+          {/* Nav Buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-start' }}>
             {pages.map((page) => (
               <Button
@@ -164,7 +185,11 @@ const Navbar = () => {
                   my: 2,
                   color: activePage === page ? 'primary.main' : 'white',
                   display: 'block',
-                  mx: 1.5, // Adjust this value for spacing between buttons
+                  mx: 1.5,
+                  '&:hover': {
+                    backgroundColor: '#f0f0f0', // Off-white background on hover
+                    color: 'black', // Black text color on hover
+                  }
                 }}
               >
                 {page}
@@ -172,8 +197,8 @@ const Navbar = () => {
             ))}
           </Box>
 
-          {/* Search Bar */}
-          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', mr: 1 }}>
+          {/* Search Bar for Large Devices */}
+          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>
             <TextField
               variant="outlined"
               size="small"
@@ -188,39 +213,26 @@ const Navbar = () => {
               sx={{
                 backgroundColor: 'white',
                 borderRadius: 1,
-                width: { xs: '100px', md: '200px' }, // Adjust width for different screen sizes
+                width: '200px', // Fixed width for larger devices
               }}
             />
           </Box>
 
-          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', backgroudcolor: "grey" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                mr: 1,
-                color: 'black', 
-                backgroundColor: '#adacac', 
-                '&:hover': {
-                  backgroundColor: 'grey',
-                }
-              }}
-              onClick={() => router.push('/login')}
+          {/* Search Icon for Small Devices */}
+          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center', mr: 1 }}>
+            <IconButton
+              size="large"
+              aria-label="search"
+              color="inherit"
+              onClick={handleOpenSearchMenu}
             >
-              Get Started
-            </Button>
-
-            {/* <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip> */}
+              <SearchIcon />
+            </IconButton>
             <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
+              id="search-menu"
+              anchorEl={anchorElSearch}
               anchorOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
               }}
               keepMounted
@@ -228,15 +240,58 @@ const Navbar = () => {
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              open={Boolean(anchorElSearch)}
+              onClose={handleCloseSearchMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+                '& .MuiPaper-root': {
+                  overflow: 'visible', // Ensure overflow is handled properly
+                },
+              }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseSearchMenu} sx={{ padding: 0 }}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder="Search..."
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    backgroundColor: 'white',
+                    borderRadius: 1,
+                    width: '200px', // Fixed width for dropdown search bar
+                    margin: '10px', // Margin to ensure it is not clipped
+                  }}
+                />
+              </MenuItem>
             </Menu>
+          </Box>
+
+          {/* Get Started Button */}
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                mr: 1,
+                color: 'black',
+                backgroundColor: '#adacac',
+                fontSize: { xs: '0.7rem', sm: '0.8rem' }, // Adjust font size based on screen size
+                padding: '4px 8px', // Adjust padding for smaller button
+                height: '36px', // Adjust height for better fit
+                '&:hover': {
+                  backgroundColor: '#f0f0f0',
+                }
+              }}
+              onClick={() => router.push('/login')}
+            >
+              Get Started
+            </Button>
           </Box>
         </Toolbar>
       </Container>
