@@ -2,10 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import SignupSection from "../signupform/SignupSection";
 
 const Features = () => {
   return (
     <>
+    {/*---------------------------------------------- Card Section  ---------------------------------*/}
       <div className="py-16 bg-gray-50">
         <div className="text-center px-4 mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -80,6 +82,11 @@ const Features = () => {
           </div>
         </div>
       </div>
+
+      {/*------------------------------------- User Details section ----------------------------*/}
+      <SignupSection/>
+
+      {/*----------------------------------------- Image section  -------------------------------*/}
 
       <div className="flex flex-col lg:flex-row items-center p-8 lg:p-16 bg-gray-100 shadow-md">
         {/* Left Side Content */}

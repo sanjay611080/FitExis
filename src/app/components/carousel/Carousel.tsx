@@ -5,9 +5,9 @@ const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const videos = [
     'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
-    'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
-    'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
-    'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
+    // 'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
+    // 'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
+    // 'https://d1j25p53a9uhmz.cloudfront.net/assets/front_end/fitreserve-homepage-6381139ce66b974c90d9cda92d75ae5102f0dbefeac116793b8737f23563a724.mp4',
   ];
 
   // Automatically change video every 3 seconds
