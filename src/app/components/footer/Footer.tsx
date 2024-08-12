@@ -21,27 +21,27 @@ const Footer = () => {
             <h5 className="text-xl font-semibold mb-4">Quick Links</h5>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-white transition duration-300">
+                <Link href="/About" className="text-gray-400 hover:text-white transition duration-300">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-gray-400 hover:text-white transition duration-300">
+                <Link href="/Services" className="text-gray-400 hover:text-white transition duration-300">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="/membership" className="text-gray-400 hover:text-white transition duration-300">
+                <Link href="/Membership" className="text-gray-400 hover:text-white transition duration-300">
                   Memberships
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition duration-300">
+                <Link href="/About" className="text-gray-400 hover:text-white transition duration-300">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/progress" className="text-gray-400 hover:text-white transition duration-300">
+                <Link href="/Progress" className="text-gray-400 hover:text-white transition duration-300">
                   Daily Progress
                 </Link>
               </li>

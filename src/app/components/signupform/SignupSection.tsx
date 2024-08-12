@@ -104,7 +104,7 @@ const SignupSection = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black"
-                style={{ minWidth: "200px" }}
+                style={{ minWidth: "200px", height: "2.5rem" }}
               >
                 <option value="" disabled>
                   Select a pass
@@ -113,18 +113,10 @@ const SignupSection = () => {
                 <option value="weekly">Weekly Pass</option>
                 <option value="monthly">Monthly Pass</option>
               </select>
-              <style jsx>{`
-                option {
-                  color: black;
-                }
-              `}</style>
             </div>
           </div>
-          <button
-            type="submit"
-            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-black"
-          >
-            Get Started
+          <button className="inline-block mt-6 px-6 py-3 border-2 border-black text-white bg-gray-800 hover:bg-black  rounded-lg transition duration-300">
+            Get FitExis Pass
           </button>
         </form>
       </div>
