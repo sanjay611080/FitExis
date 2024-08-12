@@ -287,7 +287,7 @@ const Navbar = () => {
                   backgroundColor: '#f0f0f0',
                 }
               }}
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/Progress')}
             >
               Get Started
             </Button>
