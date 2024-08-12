@@ -4,54 +4,77 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
+import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { MenuItem, Typography, TextField, InputAdornment } from '@mui/material';
+import { Typography, TextField, InputAdornment } from '@mui/material';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState, useRef, useEffect } from 'react';
 
 const pages = ['Home', 'Near Me', 'Plans', 'About'];
-const settings = ['Profile', 'Account', 'Logout'];
 
 const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElSearch, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const [activePage, setActivePage] = React.useState<string | null>(null);
+  const [searchVisible, setSearchVisible] = React.useState(false); // State for search bar visibility
+  const searchRef = useRef<HTMLDivElement | null>(null); // Ref for search bar container
   const router = useRouter();
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+  const handleOpenDrawer = () => {
+    setOpenDrawer(true);
   };
 
-  const handleOpenSearchMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElSearch(event.currentTarget);
-  };
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseSearchMenu = () => {
-    setAnchorElSearch(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleCloseDrawer = () => {
+    setOpenDrawer(false);
   };
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
     const path = page === 'Home' ? '/' : `/${page.replace(' ', '-')}`;
     router.push(path);
-    handleCloseNavMenu();
+    handleCloseDrawer();
+  };
+
+  const handleToggleSearch = () => {
+    setSearchVisible(prev => !prev);
+  };
+
+  // Close search bar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setSearchVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const searchBarStyles = {
+    backgroundColor: 'white',
+    borderRadius: 1,
+    width: { xs: '100%', md: '200px' }, // Responsive width
+    marginTop: { xs: '8px', md: 0 },
+    marginRight: { xs: '0', md: '16px' }, // Add gap on large screens
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'transparent', // Remove border color
+      },
+      '&:hover fieldset': {
+        borderColor: 'transparent', // Remove border color on hover
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'transparent', // Remove border color when focused
+      },
+    },
+    '& input': {
+      padding: '8px', // Adjust padding as needed
+    },
   };
 
   return (
@@ -86,7 +109,7 @@ const Navbar = () => {
               letterSpacing: '.2rem',
               color: 'white',
               textDecoration: 'none',
-              fontSize: '1rem', // Adjust font size
+              fontSize: '1rem',
             }}
             onClick={() => handlePageChange('Home')}
             style={{ cursor: 'pointer' }}
@@ -98,54 +121,52 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="menu"
+              aria-label={openDrawer ? 'close menu' : 'open menu'}
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={openDrawer ? handleCloseDrawer : handleOpenDrawer}
               color="inherit"
             >
-              <MenuIcon />
+              {openDrawer ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+
+            {/* Drawer Component */}
+            <Drawer
+              anchor="left"
+              open={openDrawer}
+              onClose={handleCloseDrawer}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                '& .MuiDrawer-paper': {
+                  width: 250,
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: '#f0f0f0', // Off-white background on hover
-                      color: 'black', // Black text color on hover
-                    }
-                  }}
-                >
-                  <Typography
-                    textAlign="center"
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+                <IconButton onClick={handleCloseDrawer} color="inherit">
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
                     sx={{
-                      color: activePage === page ? 'primary.main' : 'text.primary',
+                      my: 1,
+                      color: 'white',
+                      textAlign: 'left',
+                      '&:hover': {
+                        backgroundColor: '#f0f0f0',
+                        color: 'black',
+                      },
                     }}
                   >
                     {page}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+                  </Button>
+                ))}
+              </Box>
+            </Drawer>
           </Box>
 
           {/* Logo for Mobile View */}
@@ -167,7 +188,7 @@ const Navbar = () => {
               letterSpacing: '.2rem',
               color: 'white',
               textDecoration: 'none',
-              fontSize: '1.2rem', // Adjust font size
+              fontSize: '1.2rem',
             }}
             onClick={() => handlePageChange('Home')}
             style={{ cursor: 'pointer' }}
@@ -187,8 +208,8 @@ const Navbar = () => {
                   display: 'block',
                   mx: 1.5,
                   '&:hover': {
-                    backgroundColor: '#f0f0f0', // Off-white background on hover
-                    color: 'black', // Black text color on hover
+                    backgroundColor: '#f0f0f0',
+                    color: 'black',
                   }
                 }}
               >
@@ -198,7 +219,7 @@ const Navbar = () => {
           </Box>
 
           {/* Search Bar for Large Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>
+          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <TextField
               variant="outlined"
               size="small"
@@ -210,46 +231,29 @@ const Navbar = () => {
                   </InputAdornment>
                 ),
               }}
-              sx={{
-                backgroundColor: 'white',
-                borderRadius: 1,
-                width: '200px', // Fixed width for larger devices
-              }}
+              sx={searchBarStyles}
             />
           </Box>
 
           {/* Search Icon for Small Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center', mr: 1 }}>
+          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
             <IconButton
               size="large"
               aria-label="search"
+              aria-controls="search-appbar"
+              aria-haspopup="true"
+              onClick={handleToggleSearch}
               color="inherit"
-              onClick={handleOpenSearchMenu}
             >
               <SearchIcon />
             </IconButton>
-            <Menu
-              id="search-menu"
-              anchorEl={anchorElSearch}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElSearch)}
-              onClose={handleCloseSearchMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-                '& .MuiPaper-root': {
-                  overflow: 'visible', // Ensure overflow is handled properly
-                },
-              }}
-            >
-              <MenuItem onClick={handleCloseSearchMenu} sx={{ padding: 0 }}>
+
+            {/* Search Bar for Small Devices */}
+            {searchVisible && (
+              <Box
+                ref={searchRef} // Attach ref here
+                sx={{ position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'transparent', p: 2 }}
+              >
                 <TextField
                   variant="outlined"
                   size="small"
@@ -261,15 +265,10 @@ const Navbar = () => {
                       </InputAdornment>
                     ),
                   }}
-                  sx={{
-                    backgroundColor: 'white',
-                    borderRadius: 1,
-                    width: '200px', // Fixed width for dropdown search bar
-                    margin: '10px', // Margin to ensure it is not clipped
-                  }}
+                  sx={searchBarStyles}
                 />
-              </MenuItem>
-            </Menu>
+              </Box>
+            )}
           </Box>
 
           {/* Get Started Button */}
@@ -281,9 +280,9 @@ const Navbar = () => {
                 mr: 1,
                 color: 'black',
                 backgroundColor: '#adacac',
-                fontSize: { xs: '0.7rem', sm: '0.8rem' }, // Adjust font size based on screen size
-                padding: '4px 8px', // Adjust padding for smaller button
-                height: '36px', // Adjust height for better fit
+                fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                padding: '4px 8px',
+                height: '36px',
                 '&:hover': {
                   backgroundColor: '#f0f0f0',
                 }
