@@ -8,7 +8,7 @@ import Footer from '../components/footer/Footer'
 const About = () => {
   return (
     <>
-      <Navbar />
+      <Navbar showSearch={false}/>
       <Head>
         <title>About Us | FitExis</title>
         <meta name="description" content="Learn more about FitExis, our mission, and our services." />

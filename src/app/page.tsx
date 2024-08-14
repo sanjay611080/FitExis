@@ -10,7 +10,7 @@ import Footer from './components/footer/Footer'
 const page = () => {
   return (
     <div>
-      <Navbar/>
+      <Navbar showSearch={false}/>
       {/* <ResponsiveAppBar/> */}
       <Carousel/>
       <Homepage/>

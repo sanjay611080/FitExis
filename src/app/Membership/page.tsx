@@ -5,7 +5,7 @@ import Navbar from "../components/navbar/Navbar";
 const page = () => {
   return (
     <>
-      <Navbar />
+      <Navbar showSearch={true}/>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">

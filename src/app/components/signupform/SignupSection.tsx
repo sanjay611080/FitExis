@@ -33,10 +33,10 @@ const SignupSection = () => {
             Join FitExis Platform Today
           </h2>
         </div>
-        <form onSubmit={handleSubmit} className="max-w-full mx-auto">
-          {/* Grid layout for form fields */}
-          <div className="flex flex-col md:flex-row md:space-x-4 mb-4">
-            <div className="flex-1 mb-4 md:mb-0">
+        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
+          {/* Responsive layout for form fields */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
+            <div className="flex flex-col">
               <label
                 htmlFor="name"
                 className="block text-left text-gray-700 mb-2"
@@ -51,10 +51,9 @@ const SignupSection = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black"
-                style={{ minWidth: "200px" }}
               />
             </div>
-            <div className="flex-1 mb-4 md:mb-0">
+            <div className="flex flex-col">
               <label
                 htmlFor="email"
                 className="block text-left text-gray-700 mb-2"
@@ -69,10 +68,9 @@ const SignupSection = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black"
-                style={{ minWidth: "200px" }}
               />
             </div>
-            <div className="flex-1 mb-4 md:mb-0">
+            <div className="flex flex-col">
               <label
                 htmlFor="mobile"
                 className="block text-left text-gray-700 mb-2"
@@ -87,10 +85,9 @@ const SignupSection = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black"
-                style={{ minWidth: "200px" }}
               />
             </div>
-            <div className="flex-1 mb-4 md:mb-0">
+            <div className="flex flex-col">
               <label
                 htmlFor="passType"
                 className="block text-left text-gray-700 mb-2"
@@ -104,7 +101,6 @@ const SignupSection = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black"
-                style={{ minWidth: "200px", height: "2.5rem" }}
               >
                 <option value="" disabled>
                   Select a pass
@@ -115,7 +111,7 @@ const SignupSection = () => {
               </select>
             </div>
           </div>
-          <button className="inline-block mt-6 px-6 py-3 border-2 border-black text-white bg-gray-800 hover:bg-black  rounded-lg transition duration-300">
+          <button className="inline-block mt-6 px-6 py-3 border-2 border-black text-white bg-gray-800 hover:bg-black rounded-lg transition duration-300">
             Get FitExis Pass
           </button>
         </form>

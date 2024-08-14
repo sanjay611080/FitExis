@@ -17,7 +17,11 @@ import { useState, useRef, useEffect } from 'react';
 
 const pages = ['Home', 'Near Me', 'Plans', 'About'];
 
-const Navbar = () => {
+interface NavbarProps {
+  showSearch?: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [activePage, setActivePage] = React.useState<string | null>(null);
   const [searchVisible, setSearchVisible] = React.useState(false); // State for search bar visibility
@@ -218,58 +222,62 @@ const Navbar = () => {
             ))}
           </Box>
 
-          {/* Search Bar for Large Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Search..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={searchBarStyles}
-            />
-          </Box>
+          {/* Conditionally Render Search Bar for Desktop */}
+          {showSearch && (
+            <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Search..."
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={searchBarStyles}
+              />
+            </Box>
+          )}
 
-          {/* Search Icon for Small Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
-            <IconButton
-              size="large"
-              aria-label="search"
-              aria-controls="search-appbar"
-              aria-haspopup="true"
-              onClick={handleToggleSearch}
-              color="inherit"
-            >
-              <SearchIcon />
-            </IconButton>
-
-            {/* Search Bar for Small Devices */}
-            {searchVisible && (
-              <Box
-                ref={searchRef} // Attach ref here
-                sx={{ position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'transparent', p: 2 }}
+          {/* Conditionally Render Search Icon and Bar for Mobile */}
+          {showSearch && (
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+              <IconButton
+                size="large"
+                aria-label="search"
+                aria-controls="search-appbar"
+                aria-haspopup="true"
+                onClick={handleToggleSearch}
+                color="inherit"
               >
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  placeholder="Search..."
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={searchBarStyles}
-                />
-              </Box>
-            )}
-          </Box>
+                <SearchIcon />
+              </IconButton>
+
+              {/* Search Bar for Small Devices */}
+              {searchVisible && (
+                <Box
+                  ref={searchRef} // Attach ref here
+                  sx={{ position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'transparent', p: 2 }}
+                >
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    placeholder="Search..."
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={searchBarStyles}
+                  />
+                </Box>
+              )}
+            </Box>
+          )}
 
           {/* Get Started Button */}
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
