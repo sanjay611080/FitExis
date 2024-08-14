@@ -1,11 +1,31 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
 import Footer from '../components/footer/Footer'
 import Navbar from '../components/navbar/Navbar'
+import AuthModalController from '../components/authModalController/AuthModalController';
 
 const page = () => {
+
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const [showSignIn, setShowSignIn] = React.useState(false);
+
+  const handleOpenSignInModal = () => {
+    setShowSignIn(true);
+    setShowAuthModal(true);
+  };
+
+  const handleOpenSignUpModal = () => {
+    setShowSignIn(false);
+    setShowAuthModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAuthModal(false);
+  };
+
   return (
     <>
-    <Navbar/>
+      <Navbar showSearch={false} onOpenModal={handleOpenSignInModal}/>
   <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="text-center">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Coming Soon</h1>
@@ -29,6 +49,12 @@ const page = () => {
       </div>
     </div>
     <Footer/>
+    {showAuthModal && (
+        <AuthModalController
+          onClose={handleCloseModal}
+          showSignIn={showSignIn}
+        />
+      )}
     </>
   )
 }
