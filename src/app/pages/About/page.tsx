@@ -1,14 +1,35 @@
 /* eslint-disable react/no-unescaped-entities */
+'use client'
 import Head from 'next/head'
-import Navbar from '../components/navbar/Navbar'
-import Footer from '../components/footer/Footer'
+import Navbar from '../../components/navbar/Navbar'
+import Footer from '../../components/footer/Footer'
+import React from 'react';
+import AuthModalController from '../../components/authModalController/AuthModalController';
 // import Image from 'next/image'
 // import gymImage from '../public/images/gym.jpg'  // Ensure you have this image in the public/images directory
 
 const About = () => {
+
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const [showSignIn, setShowSignIn] = React.useState(false);
+
+  const handleOpenSignInModal = () => {
+    setShowSignIn(true);
+    setShowAuthModal(true);
+  };
+
+  const handleOpenSignUpModal = () => {
+    setShowSignIn(false);
+    setShowAuthModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAuthModal(false);
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar showSearch={false} onOpenModal={handleOpenSignInModal}/>
       <Head>
         <title>About Us | FitExis</title>
         <meta name="description" content="Learn more about FitExis, our mission, and our services." />
@@ -62,6 +83,12 @@ const About = () => {
         </div>
       </main>
       <Footer />
+      {showAuthModal && (
+        <AuthModalController
+          onClose={handleCloseModal}
+          showSignIn={showSignIn}
+        />
+      )}
     </>
   )
 }

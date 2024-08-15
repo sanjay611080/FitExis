@@ -1,3 +1,4 @@
+// components/navbar/Navbar.tsx
 "use client";
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -6,23 +7,35 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';  
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Typography, TextField, InputAdornment } from '@mui/material';
+import { Typography, TextField, InputAdornment, Menu, MenuItem, Avatar } from '@mui/material';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useRef, useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/firebase/config'; // Ensure this path is correct
 
 const pages = ['Home', 'Near Me', 'Plans', 'About'];
 
-const Navbar = () => {
+interface NavbarProps {
+  showSearch?: boolean;
+  onOpenModal: () => void; // Add prop for opening the modal
+}
+
+const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [activePage, setActivePage] = React.useState<string | null>(null);
   const [searchVisible, setSearchVisible] = React.useState(false); // State for search bar visibility
   const searchRef = useRef<HTMLDivElement | null>(null); // Ref for search bar container
+  const [user, loading] = useAuthState(auth); // Firebase authentication state
   const router = useRouter();
+  
+  // State for menu
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const handleOpenDrawer = () => {
     setOpenDrawer(true);
@@ -34,13 +47,26 @@ const Navbar = () => {
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
-    const path = page === 'Home' ? '/' : `/${page.replace(' ', '-')}`;
+    const path = page === 'Home' ? '/' : `/pages/${page.replace(' ', '-')}`;
     router.push(path);
     handleCloseDrawer();
   };
 
   const handleToggleSearch = () => {
     setSearchVisible(prev => !prev);
+  };
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/');
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   // Close search bar when clicking outside
@@ -218,79 +244,129 @@ const Navbar = () => {
             ))}
           </Box>
 
-          {/* Search Bar for Large Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Search..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={searchBarStyles}
-            />
-          </Box>
+          {/* Conditionally Render Search Bar for Desktop */}
+          {showSearch && (
+            <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Search..."
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={searchBarStyles}
+              />
+            </Box>
+          )}
 
-          {/* Search Icon for Small Devices */}
-          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
-            <IconButton
-              size="large"
-              aria-label="search"
-              aria-controls="search-appbar"
-              aria-haspopup="true"
-              onClick={handleToggleSearch}
-              color="inherit"
-            >
-              <SearchIcon />
-            </IconButton>
-
-            {/* Search Bar for Small Devices */}
-            {searchVisible && (
-              <Box
-                ref={searchRef} // Attach ref here
-                sx={{ position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'transparent', p: 2 }}
+          {/* Conditionally Render Search Icon and Bar for Mobile */}
+          {showSearch && (
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+              <IconButton
+                size="large"
+                aria-label="search"
+                aria-controls="search-appbar"
+                aria-haspopup="true"
+                onClick={handleToggleSearch}
+                color="inherit"
               >
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  placeholder="Search..."
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={searchBarStyles}
-                />
-              </Box>
-            )}
-          </Box>
+                <SearchIcon />
+              </IconButton>
 
-          {/* Get Started Button */}
+              {/* Search Bar for Small Devices */}
+              {searchVisible && (
+                <Box
+                  ref={searchRef} // Attach ref here
+                  sx={{ position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'transparent', p: 2 }}
+                >
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    placeholder="Search..."
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={searchBarStyles}
+                  />
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* Conditionally Render Profile Icon with Dropdown */}
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                mr: 1,
-                color: 'black',
-                backgroundColor: '#adacac',
-                fontSize: { xs: '0.7rem', sm: '0.8rem' },
-                padding: '4px 8px',
-                height: '36px',
-                '&:hover': {
-                  backgroundColor: '#f0f0f0',
-                }
-              }}
-              onClick={() => router.push('/Progress')}
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="user profile"
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar
+                    src={user.photoURL || '/default-user-icon.png'} // Use a default icon if no photoURL
+                    alt="User Profile"
+                    sx={{ width: 35, height: 35 }}
+                  />
+                </IconButton>
+                <Menu
+                  id="profile-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleMenuClose}
+                  PaperProps={{
+                    sx: {
+                      mt: 1.5,
+                      width: 200,
+                      bgcolor: 'background.paper',
+                      borderRadius: 1,
+                    },
+                  }}
+                >
+                  <MenuItem onClick={() => {
+                    router.push('/pages/User-profile');
+                    handleMenuClose();
+                  }}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem onClick={() => {
+                    handleLogout();
+                    handleMenuClose();
+                  }}>
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  mr: 1,
+                  color: 'black',
+                  backgroundColor: '#adacac',
+                  fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                  padding: '4px 8px',
+                  height: '36px',
+                  '&:hover': {
+                    backgroundColor: '#f0f0f0',
+                  } 
+                }}
+                onClick={onOpenModal} // Use the callback to open modal
+              >
+                Get Started
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>
