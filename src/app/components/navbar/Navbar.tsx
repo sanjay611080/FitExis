@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
-    const path = page === 'Home' ? '/' : `/${page.replace(' ', '-')}`;
+    const path = page === 'Home' ? '/' : `/pages/${page.replace(' ', '-')}`;
     router.push(path);
     handleCloseDrawer();
   };
@@ -334,7 +334,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
                   }}
                 >
                   <MenuItem onClick={() => {
-                    router.push('/User-profile');
+                    router.push('/pages/User-profile');
                     handleMenuClose();
                   }}>
                     Profile

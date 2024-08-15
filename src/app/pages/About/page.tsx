@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 import Head from 'next/head'
-import Navbar from '../components/navbar/Navbar'
-import Footer from '../components/footer/Footer'
+import Navbar from '../../components/navbar/Navbar'
+import Footer from '../../components/footer/Footer'
 import React from 'react';
-import AuthModalController from '../components/authModalController/AuthModalController';
+import AuthModalController from '../../components/authModalController/AuthModalController';
 // import Image from 'next/image'
 // import gymImage from '../public/images/gym.jpg'  // Ensure you have this image in the public/images directory
 
