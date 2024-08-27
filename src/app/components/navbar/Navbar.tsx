@@ -1,4 +1,3 @@
-// components/navbar/Navbar.tsx
 "use client";
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -7,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';  
+import CloseIcon from '@mui/icons-material/Close';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { Typography, TextField, InputAdornment, Menu, MenuItem, Avatar } from '@mui/material';
@@ -16,7 +15,8 @@ import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/app/firebase/config'; // Ensure this path is correct
+import { auth, db } from '@/app/firebase/config'; // Import db to fetch user data
+import { doc, getDoc } from 'firebase/firestore';
 
 const pages = ['Home', 'Near Me', 'Plans', 'About'];
 
@@ -31,11 +31,32 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
   const [searchVisible, setSearchVisible] = React.useState(false); // State for search bar visibility
   const searchRef = useRef<HTMLDivElement | null>(null); // Ref for search bar container
   const [user, loading] = useAuthState(auth); // Firebase authentication state
+  const [userProfileImage, setUserProfileImage] = useState<string | undefined>(undefined); // State for user profile image URL
   const router = useRouter();
   
   // State for menu
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    const fetchUserProfileImage = async () => {
+      if (user) {
+        try {
+          const userDoc = doc(db, 'users', user.uid);
+          const docSnapshot = await getDoc(userDoc);
+          if (docSnapshot.exists()) {
+            const userData = docSnapshot.data();
+            setUserProfileImage(userData?.photoURL || '/image.png');
+          }
+        } catch (error) {
+          console.error('Error fetching user profile image:', error);
+          setUserProfileImage('/image.png'); // Fallback to default image
+        }
+      }
+    };
+
+    fetchUserProfileImage();
+  }, [user]);
 
   const handleOpenDrawer = () => {
     setOpenDrawer(true);
@@ -47,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
 
   const handlePageChange = (page: string) => {
     setActivePage(page);
-    const path = page === 'Home' ? '/' : `/pages/${page.replace(' ', '-')}`;
+    const path = page === 'Home' ? '/' : `/${page.replace(' ', '-')}`;
     router.push(path);
     handleCloseDrawer();
   };
@@ -314,7 +335,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
                   color="inherit"
                 >
                   <Avatar
-                    src={user.photoURL || '/default-user-icon.png'} // Use a default icon if no photoURL
+                    src={userProfileImage || '/image.png'} // Use fallback image if null
                     alt="User Profile"
                     sx={{ width: 35, height: 35 }}
                   />
@@ -334,7 +355,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false, onOpenModal }) => {
                   }}
                 >
                   <MenuItem onClick={() => {
-                    router.push('/pages/User-profile');
+                    router.push('/User-profile');
                     handleMenuClose();
                   }}>
                     Profile

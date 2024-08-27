@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
+import AuthModalController from '@/app/components/authModalController/AuthModalController';
+import Footer from '@/app/components/footer/Footer';
+import Navbar from '@/app/components/navbar/Navbar';
 import React from 'react'
-import Navbar from '../../components/navbar/Navbar'
-import Footer from '../../components/footer/Footer'
-import AuthModalController from '../../components/authModalController/AuthModalController'
 
 const page = () => {
   const [showAuthModal, setShowAuthModal] = React.useState(false);

@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-// import { auth, sendPasswordResetEmail } from '@/app/firebase/config'; 
 import { useRouter } from 'next/navigation';
 import { auth } from '@/app/firebase/config';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -70,49 +69,37 @@ const SignInModal = ({
         >
           &times;
         </button>
-        <h1 className="text-3xl font-semibold mb-6 text-center">Sign In</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 mb-4 bg-white text-black rounded outline-none placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 mb-4 bg-white text-black rounded outline-none placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
-        />
-        <button
-          onClick={handleSignIn}
-          className="w-full p-3 bg-indigo-600 rounded hover:bg-indigo-500 transition-colors duration-200"
-          disabled={loading}
-        >
-          {loading ? 'Signing In...' : 'Sign In'}
-        </button>
-        {error && <p className="text-red-400 mt-4 text-center">{error.message}</p>}
-        <p className="mt-4 text-center">
-          Don’t have an account?{' '}
-          <button
-            onClick={onSwitchToSignUp}
-            className="text-blue-400 hover:underline transition-colors duration-200"
-          >
-            Sign Up here
-          </button>
-        </p>
-        <p className="mt-4 text-center">
-          Forgot your password?{' '}
-          <button
-            onClick={() => setShowResetPassword(true)}
-            className="text-blue-400 hover:underline transition-colors duration-200"
-          >
-            Reset it here
-          </button>
-        </p>
-        {showResetPassword && (
-          <div className="mt-4">
+        <h1 className="text-3xl font-semibold mb-6 text-center">
+          {showResetPassword ? 'Reset Password' : 'Sign In'}
+        </h1>
+
+        {/* Conditional rendering of forms */}
+        {!showResetPassword ? (
+          <>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 mb-4 bg-white text-black rounded outline-none placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 mb-4 bg-white text-black rounded outline-none placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+            />
+            <button
+              onClick={handleSignIn}
+              className="w-full p-3 bg-indigo-600 rounded hover:bg-indigo-500 transition-colors duration-200"
+              disabled={loading}
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
+          </>
+        ) : (
+          <>
             <input
               type="email"
               placeholder="Enter your email"
@@ -126,7 +113,45 @@ const SignInModal = ({
             >
               Send Password Reset Email
             </button>
-          </div>
+          </>
+        )}
+
+        {error && <p className="text-red-400 mt-4 text-center">{error.message}</p>}
+
+        <p className="mt-4 text-center">
+          {showResetPassword ? (
+            <>
+              Remembered your password?{' '}
+              <button
+                onClick={() => setShowResetPassword(false)}
+                className="text-blue-400 hover:underline transition-colors duration-200"
+              >
+                Sign In here
+              </button>
+            </>
+          ) : (
+            <>
+              Don’t have an account?{' '}
+              <button
+                onClick={onSwitchToSignUp}
+                className="text-blue-400 hover:underline transition-colors duration-200"
+              >
+                Sign Up here
+              </button>
+            </>
+          )}
+        </p>
+
+        {!showResetPassword && (
+          <p className="mt-4 text-center">
+            Forgot your password?{' '}
+            <button
+              onClick={() => setShowResetPassword(true)}
+              className="text-blue-400 hover:underline transition-colors duration-200"
+            >
+              Reset it here
+            </button>
+          </p>
         )}
       </div>
     </div>
